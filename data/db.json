@@ -1,0 +1,7 @@
+{
+    "cars": [
+        {"LP": "5PE2Z7", "brand": "Porsche", "year": 1990, "id": 1},
+        {"LP": "13ABX2", "brand": "BMW", "year": 2001, "id": 2},
+        {"LP": "66SAG0", "brand": "Toyota", "year": 1980, "id": 3}
+    ]
+}
