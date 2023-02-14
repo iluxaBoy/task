@@ -11,21 +11,21 @@
             <label>License Plate</label>
             <input type="text"
             v-model="LicensePlate" 
-            @keypress="checkCapsLP"
+            @keypress="checkCapsLP('lox')"
             @keypress.enter="whatCar">
-            <span v-if="checkLP === false" class="error"> {{error}} </span>
+            <span v-if="checkLP" class="error"> {{error}} </span>
             <label>Zipcode</label>
             <div class="zip">
             <input type="text"
             v-model="Zipcode.letters"
             v-model.trim="Zipcode.letters"
-            @keypress="checkZip($event)">
+            @keypress="checkZipcode($event)"
+            @keydown="checkCapsZip">
             <input type="number"
             v-model="Zipcode.numbers" 
-            v-model.trim="Zipcode.numbers" 
-            @keypress="checkCapsZip">
+            v-model.trim="Zipcode.numbers">
             </div>
-            <span v-if="checkZip === false" class="error"> {{error}} </span>
+            <span v-if="checkZip" class="error"> {{error}} </span>
             <label>House Number</label>
             <input type="number"  v-model="Housenumber" required>
             <label>House Number Addition</label>
@@ -36,7 +36,7 @@
             <input type="number" v-model="birthdate.month" placeholder="MM" @keypress="checkDate"><span>/</span>
             <input type="number" v-model="birthdate.year" placeholder="YYYY" @keypress="checkDate">
             </div>
-            <span v-if="checkBD === false" class="error"> {{error}} </span>
+            <span v-if="checkBD" class="error"> {{error}} </span>
             <label>Claim Free Years</label>
             <select v-model="ClaimFree">
                 <option value="0-5">0-5</option>
@@ -57,7 +57,7 @@
             </select>
         </form>
         <div class="btn" @click="onSubmit">
-            Vergelijken
+            Confirm
         </div>
     </template>
     <template #smallCard>some text</template>
@@ -94,32 +94,32 @@ export default {
         const birthdate = ref([{day: 0, month: 0, year: 0}])
         const ClaimFree = ref("0-5")//dont relly know what is claim free years so just did something like this
         const Kilometrage = ref("7501 t/m 10000 KM")
-        const error = ref("")
-        let checkLP = ref(true)
-        let checkZip = ref(true)
-        let checkBD = ref(true)
+        const error = ref("aaa")
+        let checkLP = ref(false)
+        let checkZip = ref(false)
+        let checkBD = ref(false)
         let showCard = ref(false)
 
-        const checkCapsLP = (word) =>{
-            if (word.target.value === word.target.value.toUpperCase()) {
-                checkLP.value = true
-            }else{
-                error.value = "Enter only upercase"
+        const checkCapsLP = (str) =>{
+            if (LicensePlate.value === LicensePlate.value.toUpperCase()) {
                 checkLP.value = false
+            }else{
+                error.value = str.value
+                checkLP.value = true
             }
         }
         const checkCapsZip = (word) =>{
             if (word.target.value === word.target.value.toUpperCase()) {
-                checkZip.value = true
+                checkZip.value = false
             }else{
                 error.value = "Enter only upercase"
-                checkZip.value = false
+                checkZip.value = true
             }
         }
 
         const checkZipcode = (e) =>{
             if (Zipcode.value.letters === false) {
-                check.value = false
+                check.value = true
             }
 
             let char = String.fromCharCode(e.keyCode)
@@ -130,7 +130,6 @@ export default {
         const whatCar = () =>{
             for (const key in cars.value) {
                 if (cars.value[key].LP === LicensePlate.value) {
-                    console.log(cars.value[key].brand);
                     LP.value = cars.value[key].LP
                     brand.value = cars.value[key].brand
                     year.value = cars.value[key].year
@@ -147,6 +146,9 @@ export default {
             )
             {
                 error.value = "Date is incorect"
+                checkBD.value = true
+            }
+            else{
                 checkBD.value = false
             }
         }
@@ -252,9 +254,12 @@ export default {
         cursor: pointer;
         transition: .1s ease;
     }
-
     .btn:hover {
         background: #7cc4f3;
+    }
+    .btn:focus{
+        background-color: #497491;
+        border-radius: 12px;
     }
     
     form{

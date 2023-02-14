@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <CarForm />
+    <CarForm class="car-form" />
   </div>
 </template>
 
@@ -12,3 +12,9 @@ export default {
   components: { CarForm }
 }
 </script>
+
+<style scoped>
+  .car-form{
+    margin-top: 34px;
+  }
+</style>
